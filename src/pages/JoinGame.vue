@@ -1,7 +1,7 @@
 <template>
   <main class="join-game">
-    <div class="join-game-container">
-      <div class="join-game-nav">
+    <div v-bind:class="[globalContrastVariable.applyContrast ? 'join-game-container-contrast': 'join-game-container']">
+      <div v-bind:class="[globalContrastVariable.applyContrast ? 'join-game-nav-contrast': 'join-game-nav']">
         <h1>Entrar no Jogo</h1>
       </div>
 
@@ -24,8 +24,8 @@
         </div>
 
         <div class="panel-wrapper">
-          <a class="btn join"  @click="joinGame">entrar</a>
-          <a class="btn back" @click="back">voltar</a>
+          <a v-bind:class="[globalContrastVariable.applyContrast ? 'btn joinContrast':'btn join']"  @click="joinGame">entrar</a>
+          <a v-bind:class="[globalContrastVariable.applyContrast ? 'btn backContrast':'btn contrast']" @click="back">voltar</a>
         </div>
 
       </form>
@@ -37,6 +37,7 @@
 import { isEmailValid, isNicknameValid } from "../utils/utils.js"
 import * as gameService from "../services/game"
 import { shuffle } from 'underscore'
+import { globalContrastVariable } from '../main.js';
 
 export default {
   name: "JoinGame",
@@ -46,6 +47,7 @@ export default {
       id: 0,
       email: "",
       nick: "",
+      globalContrastVariable
     }
   },
 
@@ -141,6 +143,19 @@ export default {
   background-size: 6vh;
 }
 
+.join-game-container-contrast{
+  height: 87vh;
+  width: 40vw;
+  display: flex;
+  flex-direction: column;
+  border: 0.4vh solid rgb(22, 22, 22);
+  border-radius: 1vh;
+  box-shadow: 0 0 15vh rgba(216, 216, 216, 0.52);
+  background-color: #ffffff;
+  background-image: url("data:image/svg+xml,%3Csvg width='52' height='26' viewBox='0 0 52 26' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='0.05'%3E%3Cpath d='M10 10c0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6h2c0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4v2c-3.314 0-6-2.686-6-6 0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6zm25.464-1.95l8.486 8.486-1.414 1.414-8.486-8.486 1.414-1.414z' /%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  background-size: 6vh;
+}
+
 @media only screen and (max-width: 800px) {
   .join-game-container {
      width: 90vw;
@@ -149,6 +164,15 @@ export default {
 
 .join-game-nav {
     background-color: rgb(44, 78, 117);
+    display: flex;
+    justify-content: center;
+    color: #ffffff;
+    height: 7vh;
+    align-items: center;
+}
+
+.join-game-nav-contrast {
+    background-color: rgb(20, 20, 20);
     display: flex;
     justify-content: center;
     color: #ffffff;
@@ -262,11 +286,28 @@ p{
   border-bottom: 1.5px solid rgb(44, 78, 117);
 }
 
+.joinContrast {
+  color: rgb(255, 255, 255);
+  font-family: "HelveticaRounded";
+  font-size: 23px;
+  cursor: pointer;
+  font-weight: lighter;
+  background: rgb(12, 12, 12);
+  border-bottom: 1.5px solid rgb(14, 14, 14);
+}
+
 .back {
   color: rgb(44, 78, 117);
   cursor: pointer;
   font-family: "HelveticaRounded";
   border: 1px solid rgb(44, 78, 117);
+}
+
+.backContrast {
+  color: rgb(13, 13, 14);
+  cursor: pointer;
+  font-family: "HelveticaRounded";
+  border: 1px solid rgb(14, 14, 14);
 }
 </style>
 

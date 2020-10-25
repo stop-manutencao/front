@@ -1,8 +1,8 @@
 <template>
     <main class="game-creation">
 
-      <div class="game-creation-container">
-        <div class="game-creation-nav">
+      <div v-bind:class="[globalContrastVariable.applyContrast ? 'game-creation-container-contrast': 'game-creation-container']">
+        <div v-bind:class="[globalContrastVariable.applyContrast ? 'game-creation-nav-contrast': 'game-creation-nav']">
           <h1>Configurações de Jogo</h1>
 
         </div>
@@ -37,8 +37,8 @@
           </div> -->
 
           <div class="panel-wrapper">
-            <a class="btn create" @click="createGame">criar jogo</a>
-            <a class="btn back" @click="back">voltar</a>
+            <a class="btn" v-bind:class="[globalContrastVariable.applyContrast ? 'createContrast': 'create']" @click="createGame">criar jogo</a>
+            <a class="btn" v-bind:class="[globalContrastVariable.applyContrast ? 'backContrast': 'back']" @click="back">voltar</a>
           </div>
         </form>
       </div>
@@ -49,6 +49,7 @@
 import { isEmailValid, isNicknameValid } from "../utils/utils.js"
 import * as gameService from "../services/game"
 import { shuffle } from 'underscore'
+import { globalContrastVariable } from '../main.js';
 
 export default {
   name: "Create",
@@ -58,7 +59,8 @@ export default {
       nick: "",
       categories: 1,
       players: 1,
-      timer: false
+      timer: false,
+      globalContrastVariable
     }
   },
 
@@ -146,6 +148,19 @@ export default {
     background-size: 35vh;
 }
 
+.game-creation-container-contrast {
+    height: 85vh;
+    width: 40vw;
+    display: flex;
+    flex-direction: column;
+    border: 0.5vh solid rgb(20, 20, 20);
+    border-radius: 1vh;
+    box-shadow: 0 0 15vh rgba(24, 24, 24, 0.52);
+    background-color: #ffffff;
+    background-image: url("../assets/svg/floating-cogs.svg");
+    background-size: 35vh;
+}
+
 
 @media only screen and (max-width: 800px) {
   .game-creation-container {
@@ -155,6 +170,15 @@ export default {
 
 .game-creation-nav {
     background-color: rgb(75, 114, 83);
+    display: flex;
+    justify-content: center;
+    color: #ffffff;
+    height: 7vh;
+    align-items: center;
+}
+
+.game-creation-nav-contrast {
+    background-color: rgb(15, 15, 15);
     display: flex;
     justify-content: center;
     color: #ffffff;
@@ -267,11 +291,28 @@ h1, p { margin: 0; }
   border-bottom: 1.5px solid rgb(75, 114, 83);
 }
 
+.createContrast {
+  color: rgb(255, 255, 255);
+  font-family: "HelveticaRounded";
+  font-size: 23px;
+  cursor: pointer;
+  font-weight: lighter;
+  background: rgb(19, 19, 19);
+  border-bottom: 1.5px solid rgb(14, 14, 14);
+}
+
 .back {
   cursor: pointer;
   color: rgb(75, 114, 83);
   font-family: "HelveticaRounded";
   border: 1px solid rgb(75, 114, 83);
+}
+
+.backContrast {
+  cursor: pointer;
+  color: rgb(15, 15, 15);
+  font-family: "HelveticaRounded";
+  border: 1px solid rgb(23, 24, 23);
 }
 
 .create:hover { background: rgb(180, 240, 198); }

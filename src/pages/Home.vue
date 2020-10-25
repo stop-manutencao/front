@@ -1,8 +1,8 @@
 
 <template>
     <!-- <div id="bg"> -->
-      <div id="home">
-          <img id="logo" draggable="false" src="../assets/png/logo_1.png">
+      <div id="home" class="home">
+          <img id="logo" class="logo" draggable="false" v-bind:class="[globalContrastVariable.applyContrast ? 'logoContrast' : '']">
           <main-menu/>
           <h1>mobis</h1>
       </div>
@@ -11,13 +11,20 @@
 
 <script>
   import mainMenu from '../components/mainMenu';
+  import { globalContrastVariable } from '../main.js';
 
   export default {
     name: 'Home',
 
     components: {
-              'main-menu': mainMenu
+      'main-menu': mainMenu
     },
+
+    data() {
+      return {
+        globalContrastVariable
+      }
+    }
   }
 
 </script>
@@ -50,7 +57,7 @@
     user-select: none;
   }
 
-  #home
+  .home
   {
     font-family: 'HelveticaRounded', 'Avenir', Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -63,9 +70,18 @@
     height: 100%;
    }
 
-   #home #logo{
+   .home .logo{
      margin-top: 10vh;
      margin-bottom: 5vh;
      width: 35vh;
+     content: url('../assets/png/logo_1.png');
    }
+
+   .home .logoContrast{
+     margin-top: 10vh;
+     margin-bottom: 5vh;
+     width: 35vh;
+     content: url('../assets/png/logo_1_contrast.png');
+   }
+
 </style>
