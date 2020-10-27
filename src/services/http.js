@@ -15,7 +15,8 @@ const client = axios.create({
   headers: {
     'Access-Control-Allow-Origin': '*',
     'Content-Type': 'application/json',
-  }
+  },
+  validateStatus: function() { return true }
 })
 
 export default {

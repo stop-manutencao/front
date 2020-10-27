@@ -121,6 +121,7 @@ export default {
             sessionStorage.setItem('gameStatus', JSON.stringify(res.data.status))
             return this.$router.push('GameRoom')
           }
+          alert(res.data.message)
           console.error(res.data)
 
         }).catch(err => console.error(err))
