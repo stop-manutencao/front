@@ -1,55 +1,104 @@
 <template>
-    <main class="game-creation">
+  <main class="game-creation">
+    <div
+      v-bind:class="[
+        globalContrastVariable.applyContrast
+          ? 'game-creation-container-contrast'
+          : 'game-creation-container',
+      ]"
+    >
+      <div
+        v-bind:class="[
+          globalContrastVariable.applyContrast
+            ? 'game-creation-nav-contrast'
+            : 'game-creation-nav',
+        ]"
+      >
+        <h1>Configurações de Jogo</h1>
+      </div>
 
-      <div v-bind:class="[globalContrastVariable.applyContrast ? 'game-creation-container-contrast': 'game-creation-container']">
-        <div v-bind:class="[globalContrastVariable.applyContrast ? 'game-creation-nav-contrast': 'game-creation-nav']">
-          <h1>Configurações de Jogo</h1>
-
+      <form class="game-creation-form">
+        <div class="input-wrapper">
+          <p>Email</p>
+          <input
+            class="email"
+            type="text"
+            placeholder="exmple@email.com"
+            v-model.lazy="email"
+          />
+          <p class="invalidEmailMsg" style="display: none">Email inválido</p>
         </div>
 
-        <form class="game-creation-form">
+        <div class="input-wrapper">
+          <p>Apelido</p>
+          <input
+            class="nick"
+            type="text"
+            placeholder="John Doe"
+            v-model.lazy="nick"
+          />
+          <p class="invalidNickMsg" style="display: none">Apelido inválido</p>
+        </div>
 
-          <div class="input-wrapper">
-            <p>Email</p>
-            <input class="email" type="text" placeholder="exmple@email.com" v-model.lazy="email">
-            <p class="invalidEmailMsg" style="display:none">Email inválido</p>
-          </div>
+        <div class="input-wrapper">
+          <p>Número máximo de de categorias</p>
+          <input
+            class="categorias"
+            type="number"
+            min="1"
+            name="categorias"
+            placeholder="1"
+            v-model.lazy="categories"
+          /><br />
+        </div>
 
-          <div class="input-wrapper">
-            <p>Apelido</p>
-            <input class="nick" type="text" placeholder="John Doe" v-model.lazy="nick">
-            <p class="invalidNickMsg" style="display:none">Apelido inválido</p>
-          </div>
+        <div class="input-wrapper">
+          <p>Número máximo de de jogadores</p>
+          <input
+            class="players"
+            type="number"
+            min="1"
+            name="players"
+            placeholder="1"
+            v-model.lazy="players"
+          />
+        </div>
 
-          <div class="input-wrapper">
-            <p>Número máximo de de categorias</p>
-            <input class="categorias" type="number" min="1" name="categorias" placeholder="1" v-model.lazy="categories"><br>
-          </div>
-
-          <div class="input-wrapper">
-            <p>Número máximo de de jogadores</p>
-            <input class="players" type="number" min="1" name="players" placeholder="1" v-model.lazy="players">
-          </div>
-
-          <!-- <div class="timer-wrapper">
+        <!-- <div class="timer-wrapper">
             <p>Jogar com limite de tempo</p>
             <input type="checkbox" name="time" v-model="timer">
           </div> -->
 
-          <div class="panel-wrapper">
-            <a class="btn" v-bind:class="[globalContrastVariable.applyContrast ? 'createContrast': 'create']" @click="createGame">criar jogo</a>
-            <a class="btn" v-bind:class="[globalContrastVariable.applyContrast ? 'backContrast': 'back']" @click="back">voltar</a>
-          </div>
-        </form>
-      </div>
-    </main>
+        <div class="panel-wrapper">
+          <a
+            class="btn"
+            v-bind:class="[
+              globalContrastVariable.applyContrast
+                ? 'createContrast'
+                : 'create',
+            ]"
+            @click="createGame"
+            >criar jogo</a
+          >
+          <a
+            class="btn"
+            v-bind:class="[
+              globalContrastVariable.applyContrast ? 'backContrast' : 'back',
+            ]"
+            @click="back"
+            >voltar</a
+          >
+        </div>
+      </form>
+    </div>
+  </main>
 </template>
 
 <script>
-import { isEmailValid, isNicknameValid } from "../utils/utils.js"
-import * as gameService from "../services/game"
-import { shuffle } from 'underscore'
-import { globalContrastVariable } from '../main.js';
+import { isEmailValid, isNicknameValid } from "../utils/utils.js";
+import * as gameService from "../services/game";
+import { shuffle } from "underscore";
+import { globalContrastVariable } from "../main.js";
 
 export default {
   name: "Create",
@@ -60,130 +109,136 @@ export default {
       categories: 1,
       players: 1,
       timer: false,
-      globalContrastVariable
-    }
+      globalContrastVariable,
+    };
   },
 
   mounted: () => {
-    let email = document.querySelector(".email")
-    let nick = document.querySelector(".nick")
-    let msgErrorDialog = document.querySelector(".invalidEmailMsg")
-    let errorEmailDialog = document.querySelector(".invalidNickMsg")
+    let email = document.querySelector(".email");
+    let nick = document.querySelector(".nick");
+    let msgErrorDialog = document.querySelector(".invalidEmailMsg");
+    let errorEmailDialog = document.querySelector(".invalidNickMsg");
 
     nick.addEventListener("focusout", () => {
       !isNicknameValid(nick.value)
         ? (nick.style.marginBottom = "0") &&
           (errorEmailDialog.style.display = "block")
         : (nick.style.marginBottom = "15px") &&
-          (errorEmailDialog.style.display = "none")
-    })
+          (errorEmailDialog.style.display = "none");
+    });
 
     email.addEventListener("focusout", () => {
       !isEmailValid(email.value)
         ? (email.style.marginBottom = "0") &&
           (msgErrorDialog.style.display = "block")
         : (email.style.marginBottom = "15px") &&
-          (msgErrorDialog.style.display = "none")
-    })
+          (msgErrorDialog.style.display = "none");
+    });
   },
 
   methods: {
-    back()
-    {
-      return this.$router.push('/')
+    back() {
+      return this.$router.push("/");
     },
 
-    createGame()
-    {
+    createGame() {
       const data = {
-          email: this.email,
-          nickname: this.nick,
-          maxNumberCategories: this.categories,
-          maxNumberPlayers: this.players,
-          timer: this.timer
-        }
+        email: this.email,
+        nickname: this.nick,
+        maxNumberCategories: this.categories,
+        maxNumberPlayers: this.players,
+        timer: this.timer,
+      };
 
-      gameService.create(data).then(res => {
-          if(res.status === 201)
-          {
+      if (data.maxNumberPlayers <= 1) {
+        alert("Uma partida deve ter 2 ou mais jogadores!");
+      } else if (data.maxNumberCategories <= 1) {
+        alert("Uma partida deve ter 2 ou mais categorias!");
+      } else {
+        gameService
+          .create(data)
+          .then((res) => {
+            if (res.status === 201) {
               const gameData = {
                 isOwner: true,
                 gameID: res.data.gameId,
                 playerID: res.data.user,
                 letter: res.data.letter,
                 status: res.data.status,
-                categories: res.data.category
+                categories: res.data.category,
+              };
+
+              for (let i = 0; i < gameData.categories.length; i++) {
+                gameData.categories[i].alternative = shuffle(
+                  gameData.categories[i].alternative
+                );
               }
 
-            for(let i=0; i<gameData.categories.length; i++) {
-              gameData.categories[i].alternative = shuffle(gameData.categories[i].alternative)
+              sessionStorage.setItem("data", JSON.stringify(gameData));
+              sessionStorage.setItem(
+                "gameStatus",
+                JSON.stringify(res.data.status)
+              );
+              return this.$router.push("GameRoom");
             }
-
-            sessionStorage.setItem('data', JSON.stringify(gameData))
-            sessionStorage.setItem('gameStatus', JSON.stringify(res.data.status))
-            return this.$router.push('GameRoom')
-          }
-          console.error(res.data)
-
-        }).catch(err => console.error(err))
-    }
-
-
-  }
-}
+            console.error(res.data);
+          })
+          .catch((err) => console.error(err));
+      }
+    },
+  },
+};
 </script>
 
 <style scoped>
-
 .game-creation-container {
-    height: 85vh;
-    width: 40vw;
-    display: flex;
-    flex-direction: column;
-    border: 0.5vh solid rgb(75, 114, 83);
-    border-radius: 1vh;
-    box-shadow: 0 0 15vh rgba(216, 216, 216, 0.52);
-    background-color: #ffffff;
-    background-image: url("../assets/svg/floating-cogs.svg");
-    background-size: 35vh;
+  height: 85vh;
+  width: 40vw;
+  display: flex;
+  flex-direction: column;
+  border: 0.5vh solid rgb(75, 114, 83);
+  border-radius: 1vh;
+  box-shadow: 0 0 15vh rgba(216, 216, 216, 0.52);
+  background-color: #ffffff;
+  background-image: url("../assets/svg/floating-cogs.svg");
+  background-size: 35vh;
 }
 
 .game-creation-container-contrast {
-    height: 85vh;
-    width: 40vw;
-    display: flex;
-    flex-direction: column;
-    border: 0.5vh solid rgb(20, 20, 20);
-    border-radius: 1vh;
-    box-shadow: 0 0 15vh rgba(24, 24, 24, 0.52);
-    background-color: #ffffff;
-    background-image: url("../assets/svg/floating-cogs.svg");
-    background-size: 35vh;
+  height: 85vh;
+  width: 40vw;
+  display: flex;
+  flex-direction: column;
+  border: 0.5vh solid rgb(20, 20, 20);
+  border-radius: 1vh;
+  box-shadow: 0 0 15vh rgba(24, 24, 24, 0.52);
+  background-color: #ffffff;
+  background-image: url("../assets/svg/floating-cogs.svg");
+  background-size: 35vh;
 }
-
 
 @media only screen and (max-width: 800px) {
   .game-creation-container {
-     width: 90vw;
+    width: 90vw;
   }
 }
 
 .game-creation-nav {
-    background-color: rgb(75, 114, 83);
-    display: flex;
-    justify-content: center;
-    color: #ffffff;
-    height: 7vh;
-    align-items: center;
+  background-color: rgb(75, 114, 83);
+  display: flex;
+  justify-content: center;
+  color: #ffffff;
+  height: 7vh;
+  align-items: center;
 }
 
 .game-creation-nav-contrast {
-    background-color: rgb(15, 15, 15);
-    display: flex;
-    justify-content: center;
-    color: #ffffff;
-    height: 7vh;
-    align-items: center;
+  background-color: rgb(15, 15, 15);
+  display: flex;
+  justify-content: center;
+  color: #ffffff;
+  height: 7vh;
+  align-items: center;
 }
 
 .input-wrapper {
@@ -192,7 +247,7 @@ export default {
   width: 95%;
 }
 
-.panel-wrapper{
+.panel-wrapper {
   width: 90%;
   height: 15vh;
   margin-top: 5vh;
@@ -202,28 +257,35 @@ export default {
   align-items: center;
 }
 
-.game-creation-nav h1{
+.game-creation-nav h1 {
   text-transform: uppercase;
   font-size: 3.5vh;
   font-family: Avenir;
   letter-spacing: 2px;
 }
 
-.timer-wrapper p { display: inline; }
-h1, p { margin: 0; }
-
-.game-creation-form {
-    height: 93vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-evenly;
-    border-radius: 0 0 0.5vh 0.5vh;
-    margin-top: 5vh;
+.timer-wrapper p {
+  display: inline;
+}
+h1,
+p {
+  margin: 0;
 }
 
-.game-creation-form .email,.nick, .players, .categorias
-{
+.game-creation-form {
+  height: 93vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  border-radius: 0 0 0.5vh 0.5vh;
+  margin-top: 5vh;
+}
+
+.game-creation-form .email,
+.nick,
+.players,
+.categorias {
   width: auto;
   height: 3vh;
 }
@@ -238,7 +300,8 @@ h1, p { margin: 0; }
   -webkit-box-shadow: 0 0 5px gray;
 }
 
-.invalidEmailMsg, .invalidNickMsg {
+.invalidEmailMsg,
+.invalidNickMsg {
   color: red;
   margin: 0;
   margin-bottom: 15px;
@@ -315,5 +378,7 @@ h1, p { margin: 0; }
   border: 1px solid rgb(23, 24, 23);
 }
 
-.create:hover { background: rgb(180, 240, 198); }
+.create:hover {
+  background: rgb(180, 240, 198);
+}
 </style>
