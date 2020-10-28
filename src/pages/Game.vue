@@ -24,6 +24,7 @@
         </carousel>
       </div>
       <button class="btnStop" v-if="allAnswered" @click="stopGame()">STOP</button>
+      <button class="btn back" @click="exitGame">Sair</button>
     </div>
   </main>
 </template>
@@ -69,6 +70,15 @@ export default {
 
   methods:{
 
+    exitGame() {
+      const self = this
+      this.socket.emit("exit", {
+        gameId: self.gameData.gameID,
+        playerId: self.gameData.playerID
+      });
+      self.$router.push('/')
+    },
+
     listen() {
         const self = this
         this.socket.emit("getGame", {
@@ -76,6 +86,7 @@ export default {
         });
         this.socket.on('gameChanged', function (data) {
           if(data.status === 'FINISHED' ){
+            console.log(data.user);
             self.$router.push('GameScore')
           }
         })
@@ -85,14 +96,12 @@ export default {
 //change the game status at Socket Event to "FINISHED" and go to next screen
     stopGame() {
       const self = this
-
       this.socket.emit("changeGameStatus", {
         gameId: self.gameData.gameID,
         status: 'FINISHED'
       });
       self.$router.push('GameScore')
     },
-
 
     increaseAnswers(){
       this.categoriesAnswered += 1
@@ -235,5 +244,41 @@ body{
     letter-spacing: 2px;
     margin: 0;
 }
+.back:hover {
+  background: rgb(255, 241, 50);
+}
 
+.back {
+  color: rgb(232, 176, 7);
+  font-family: "HelveticaRounded";
+  font-size: 23px;
+  font-weight: lighter;
+  background: rgb(255, 245, 102);
+  border-bottom: 1.5px solid rgb(232, 176, 7);
+  margin-top: 3vh;
+  margin-bottom: 2.3vh;
+}
+
+.back:hover {
+  background: rgb(255, 241, 50);
+}
+
+.btn {
+  display: block;
+  margin: auto;
+  border-radius: 30px;
+  padding: 5px;
+  width: 30vh;
+  transition: 0.5s;
+}
+
+.btn:hover {
+  transition: 0.5s;
+  background-color:#febb63;
+  text-shadow: 0 0 5vh white;
+}
+
+.btn:active {
+  transition: 0.2s;
+}
 </style>

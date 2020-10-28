@@ -10,6 +10,7 @@
         </ul>
       </div>
       <a class="btn init" v-if="gameData.isOwner" @click="startGame">Iniciar Jogo</a>
+      <a class="btn back" @click="exitGame">Sair</a>
     </div>
     <letterShow v-if="showLetter"/>
   </main>
@@ -50,12 +51,14 @@ export default {
         this.socket.emit("getGame", {
           gameId: this.gameData.gameID
         });
+
         this.socket.on('users', function (data) {
           self.players = data.players
           self.gameStatus = data.status
-          if(data.status === 'IN_PROGRESS'){
-            self.$router.push('game')
-          }
+        });
+
+        this.socket.on('ownerExit', function (data) {
+          self.$router.push('EndGame')
         });
 
         this.socket.on('gameChanged', function (data) {
@@ -70,7 +73,6 @@ export default {
             self.$router.push('GameRoom')
           }
         })
-
       },
 
      //change the game status at Socket to "in progress and go to next screen"
@@ -80,6 +82,16 @@ export default {
         gameId: self.gameData.gameID,
         status: 'IN_PROGRESS'
       });
+    },
+
+    exitGame() {
+      const self = this
+      this.socket.emit("exit", {
+        gameId: self.gameData.gameID,
+        playerId: self.gameData.playerID,
+        isOwner: self.gameData.isOwner
+      });
+      return self.$router.push('/')
     }
   }
 }
