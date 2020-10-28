@@ -181,6 +181,7 @@ export default {
               );
               return this.$router.push("GameRoom");
             }
+            alert(res.data.message);
             console.error(res.data);
           })
           .catch((err) => console.error(err));
