@@ -13,6 +13,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "socket.io-client": "^2.2.0",
+    "sweetalert2": "^10.9.0",
     "underscore": "^1.9.1",
     "vue": "^2.5.2",
     "vue-carousel": "^0.18.0",

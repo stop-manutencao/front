@@ -99,6 +99,7 @@ import { isEmailValid, isNicknameValid } from "../utils/utils.js";
 import * as gameService from "../services/game";
 import { shuffle } from "underscore";
 import { globalContrastVariable } from "../main.js";
+import Swal from 'sweetalert2'
 
 export default {
   name: "Create",

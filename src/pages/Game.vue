@@ -27,8 +27,16 @@
           </slide>
         </carousel>
       </div>
-      <button class="btnStop" v-if="allAnswered" @click="stopGame()">STOP</button>
-      <button class="btn back" @click="exitGame">Sair</button>
+      <button v-bind:class="[
+              globalContrastVariable.applyContrast
+                ? 'btnStop-contrast'
+                : 'btnStop',
+            ]" v-if="allAnswered" @click="stopGame()">STOP</button>
+      <button class="btn" v-bind:class="[
+              globalContrastVariable.applyContrast
+                ? 'back-contrast'
+                : 'back',
+            ]" @click="exitGame">Sair</button>
     </div>
   </main>
 </template>
@@ -250,6 +258,20 @@ body{
     text-transform: uppercase;
 }
 
+.btnStop-contrast
+{
+    width: 100%;
+    height: 10vh;
+    color: white;
+    background-color: #030303;
+    border: 1px solid #ffffff;
+    font-size: 5vh;
+    top: 0;
+    font-family: Exo2-reg;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
 #letter{
     text-align: center;
     font-size: 4vh;
@@ -298,6 +320,21 @@ body{
   border-bottom: 1.5px solid rgb(232, 176, 7);
   margin-top: 3vh;
   margin-bottom: 2.3vh;
+}
+
+.back-contrast {
+  color: rgb(255, 255, 255);
+  font-family: "HelveticaRounded";
+  font-size: 23px;
+  font-weight: lighter;
+  background: rgb(34, 34, 34);
+  border-bottom: 1.5px solid rgb(255, 255, 255);
+  margin-top: 3vh;
+  margin-bottom: 2.3vh;
+}
+
+.back-contrast:hover {
+  background: rgb(15, 15, 15) !important;
 }
 
 .back:hover {

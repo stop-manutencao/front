@@ -13,7 +13,9 @@
         </table>
         <!-- </li> -->
       </div>
-      <a class="btn reload" @click="newGame">Jogar Novamente</a>
+      <a class="btn"  v-bind:class="[
+              globalContrastVariable.applyContrast ? 'reload-contrast' : 'reload',
+            ]" @click="newGame">Jogar Novamente</a>
 
     </div>
   </main>
@@ -22,6 +24,7 @@
 
 <script>
 import * as gameService from "../services/game"
+import { globalContrastVariable } from "../main.js";
 
 // v-if="gameData.isOwner"
 export default {
@@ -30,7 +33,8 @@ export default {
   data: () => {
     return {
       players: [],
-      gameData: JSON.parse(sessionStorage.getItem('data'))
+      gameData: JSON.parse(sessionStorage.getItem('data')),
+      globalContrastVariable
     }
   },
 
@@ -136,6 +140,17 @@ html {
   font-weight: lighter;
   background: #ff9200;
   border-bottom: 3px solid rgb(255, 181, 70);
+  margin-top: 3vh;
+  margin-bottom: 2.3vh;
+}
+
+.reload-contrast {
+  color: rgb(255, 255, 255);
+  font-family: "HelveticaRounded";
+  font-size: 23px;
+  font-weight: lighter;
+  background: #080808;
+  border-bottom: 3px solid rgb(235, 235, 235);
   margin-top: 3vh;
   margin-bottom: 2.3vh;
 }
