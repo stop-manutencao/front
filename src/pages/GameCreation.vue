@@ -49,6 +49,7 @@
 import { isEmailValid, isNicknameValid } from "../utils/utils.js"
 import * as gameService from "../services/game"
 import { shuffle } from 'underscore'
+import Swal from 'sweetalert2'
 
 export default {
   name: "Create",
@@ -121,13 +122,16 @@ export default {
             sessionStorage.setItem('gameStatus', JSON.stringify(res.data.status))
             return this.$router.push('GameRoom')
           }
-          alert(res.data.message)
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: res.data.message,
+            footer: res.data.hint
+          })
           console.error(res.data)
 
         }).catch(err => console.error(err))
     }
-
-
   }
 }
 </script>
