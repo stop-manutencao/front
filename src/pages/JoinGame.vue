@@ -111,16 +111,10 @@ export default {
             return this.$router.push('GameRoom')
           }
 
-          else if (res.data.status !== 'OPEN'){
-            alert('A sala não está aberta no momento.')
-          }
-
+          alert(res.data.message)
           console.error(res.data)
         })
         .catch(err => {
-          if(err.response.data.hint.indexOf('The room is full') !== -1){
-            alert('A sala está cheia!')
-          }
           console.error(err)
         })
     }
