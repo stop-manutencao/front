@@ -6,6 +6,8 @@
 
 <script>
 import { answer } from '../services/game';
+import { globalContrastVariable } from "../main.js";
+
 export default {
     props:{
         alternative: {
@@ -37,19 +39,30 @@ export default {
     computed:{
         isSelected(){
             var style = ""
-            console.log(this.categoryIndex)
+            // console.log(this.categoryIndex)
+
+            // console.log('global: ', globalContrastVariable);
             switch (this.categoryIndex % 3){
                 case 0:
                     style = "orange"
+                    if (globalContrastVariable.applyContrast) {
+                        style = "contrast"
+                    }
                     break;
                 case 1:
                     style = "green"
+                    if (globalContrastVariable.applyContrast) {
+                        style = "contrast"
+                    }
                     break;
                 case 2:
                     style = "blue"
+                    if (globalContrastVariable.applyContrast) {
+                        style = "contrast"
+                    }
                     break;
             }
-
+            
             if (this.selected){
                 return style + "_selected"
             }
@@ -144,6 +157,29 @@ export default {
     border-bottom: 5px solid #b7e9ff;
     text-shadow: 0 0 2vh #a8f3ff;
 }
+
+.contrast{
+   background: none;
+   border:1px solid #ffffff;
+   box-shadow: inset 0 0 20px #c5c5c54a;
+}
+
+.contrast_selected{
+    background: #1a1a1a !important;
+    border: 1px solid #ffffff;
+    border-bottom: 5px solid #bbbbbb;
+    text-shadow: 0 0 2vh #252525;
+    color: #ffffff;
+}
+
+.contrast:hover, .contrast:focus{
+    background: #161616 !important;
+    border: 1px solid #ffffff;
+    border-bottom: 5px solid #bbbbbb;
+    text-shadow: 0 0 2vh #ffffff;
+    color: #ffffff;
+}
+
 
 button{
     transition: 0.3s;
