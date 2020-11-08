@@ -304,11 +304,13 @@ p{
 }
 
 .backContrast {
-  color: rgb(13, 13, 14);
   cursor: pointer;
+  color: rgb(255, 255, 255);
   font-family: "HelveticaRounded";
-  border: 1px solid rgb(14, 14, 14);
+  background: rgb(10, 10, 10);
+  border: 1px solid rgb(23, 24, 23);
 }
+
 </style>
 
 

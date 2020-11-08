@@ -1,16 +1,32 @@
 <template>
   <main>
     <div v-if="!showLetter" id="gameRoom">
-      <h1>ID do Jogo: {{gameData.gameID}}</h1>
+      <h1 v-bind:class="[
+              globalContrastVariable.applyContrast
+                ? 'h1-contrast'
+                : '',
+            ]">ID do Jogo: {{gameData.gameID}}</h1>
 
-      <h2>Jogadores</h2>
+      <h2 v-bind:class="[
+              globalContrastVariable.applyContrast
+                ? 'h2-contrast'
+                : '',
+            ]">Jogadores</h2>
       <div class="container">
         <ul>
           <li v-bind:key="player.nickname" v-for="player in players">{{ player.nickname }}</li>
         </ul>
       </div>
-      <a class="btn init" v-if="gameData.isOwner" @click="startGame">Iniciar Jogo</a>
-      <a class="btn back" @click="exitGame">Sair</a>
+      <a v-bind:class="[
+              globalContrastVariable.applyContrast
+                ? 'init-contrast btn-contrast'
+                : 'init btn',
+            ]" v-if="gameData.isOwner" @click="startGame">Iniciar Jogo</a>
+      <a v-bind:class="[
+              globalContrastVariable.applyContrast
+                ? 'back-contrast btn-contrast'
+                : 'back btn',
+            ]" @click="exitGame">Sair</a>
     </div>
     <letterShow v-if="showLetter"/>
   </main>
@@ -22,6 +38,7 @@ import * as gameService from "../services/game"
 import {getGameData} from "../services/game.js"
 import LetterShow from "../components/LetterShow"
 import io from "socket.io-client"
+import { globalContrastVariable } from '../main.js';
 
 export default {
   name: 'GameRoom',
@@ -35,7 +52,8 @@ export default {
       showLetter: false,
       gameStatus: JSON.parse(sessionStorage.getItem('gameStatus')),
       gameData: JSON.parse(sessionStorage.getItem('data')),
-      socket: io(httpService.baseURL)
+      socket: io(httpService.baseURL),
+      globalContrastVariable,
     }
   },
 
@@ -103,6 +121,32 @@ h1 {
     text-transform: uppercase;
     letter-spacing: 1px;
     background-color: #ffaf43;
+    border-top-right-radius: 1vh;
+    border-top-left-radius: 1vh;
+    padding-top: 5px;
+    margin-bottom: 0;
+    margin-top: 0;
+    color: white;
+}
+
+.h1-contrast {
+    font-family: Avenir;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    background-color: #080808;
+    border-top-right-radius: 1vh;
+    border-top-left-radius: 1vh;
+    padding-top: 5px;
+    margin-bottom: 0;
+    margin-top: 0;
+    color: white;
+}
+
+.h2-contrast {
+    font-family: Avenir;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    background-color: #030303;
     border-top-right-radius: 1vh;
     border-top-left-radius: 1vh;
     padding-top: 5px;
@@ -194,9 +238,24 @@ html {
   transition: 0.5s;
 }
 
+.btn-contrast {
+  display: block;
+  margin: auto;
+  border-radius: 30px;
+  padding: 5px;
+  width: 30vh;
+  transition: 0.5s;
+}
+
 .btn:hover {
   transition: 0.5s;
   background-color:#febb63;
+  text-shadow: 0 0 5vh white;
+}
+
+.btn-contrast:hover {
+  transition: 0.5s;
+  background-color:#070707;
   text-shadow: 0 0 5vh white;
 }
 
@@ -222,6 +281,24 @@ html {
     padding-right: 0;
 }
 
+.init-contrast {
+  color: white;
+  font-family: "HelveticaRounded";
+  font-size: 23px;
+  background: #181818;
+  border-bottom: 1.5px solid #161616;
+  margin: auto;
+    border-left: 3px solid #161616;
+    border-right: 3px solid #161616;
+    width: 80%;
+    border-top-left-radius: 0 !important;
+    border-top-right-radius: 0 !important;
+    border-radius: 2vh;
+    margin-bottom: 2vh;
+    padding-left: 0;
+    padding-right: 0;
+}
+
 .back:hover {
   background: rgb(255, 241, 50);
 }
@@ -233,6 +310,17 @@ html {
   font-weight: lighter;
   background: rgb(255, 245, 102);
   border-bottom: 1.5px solid rgb(232, 176, 7);
+  margin-top: 3vh;
+  margin-bottom: 2.3vh;
+}
+
+.back-contrast {
+  color: rgb(255, 255, 255);
+  font-family: "HelveticaRounded";
+  font-size: 23px;
+  font-weight: lighter;
+  background: rgb(36, 36, 36);
+  border-bottom: 1.5px solid rgb(19, 19, 19);
   margin-top: 3vh;
   margin-bottom: 2.3vh;
 }

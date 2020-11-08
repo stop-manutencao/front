@@ -296,7 +296,17 @@ p {
   box-shadow: 0 0 5px gray;
   margin-top: 5px;
   border-radius: 5px;
-  border-left: 5px solid rgb(75, 114, 83) !important;
+  border-left: 5px solid rgb(92, 75, 114) !important;
+  border: none;
+  -webkit-box-shadow: 0 0 5px gray;
+}
+
+.game-creation-form-contrast input {
+  padding: 10px;
+  box-shadow: 0 0 5px rgb(37, 37, 37);
+  margin-top: 5px;
+  border-radius: 5px;
+  border-left: 5px solid rgb(15, 15, 15) !important;
   border: none;
   -webkit-box-shadow: 0 0 5px gray;
 }
@@ -374,8 +384,9 @@ p {
 
 .backContrast {
   cursor: pointer;
-  color: rgb(15, 15, 15);
+  color: rgb(255, 255, 255);
   font-family: "HelveticaRounded";
+  background: rgb(10, 10, 10);
   border: 1px solid rgb(23, 24, 23);
 }
 
