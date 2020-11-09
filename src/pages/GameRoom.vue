@@ -1,204 +1,261 @@
 <template>
   <main>
-    <div v-if="!showLetter" v-bind:class="[
-              globalContrastVariable.applyContrast
-                ? 'gameRoom-contrast'
-                : 'gameRoom',
-            ]">
-      <h1 v-bind:class="[
-              globalContrastVariable.applyContrast
-                ? 'h1-contrast'
-                : '',
-            ]">ID do Jogo: {{gameData.gameID}}</h1>
+    <div
+      v-if="!showLetter"
+      v-bind:class="[
+        globalContrastVariable.applyContrast ? 'gameRoom-contrast' : 'gameRoom',
+      ]"
+    >
+      <h1
+        v-bind:class="[
+          globalContrastVariable.applyContrast ? 'h1-contrast' : '',
+        ]"
+      >
+        ID do Jogo: {{ gameData.gameID }}
+      </h1>
 
-      <h2 v-bind:class="[
-              globalContrastVariable.applyContrast
-                ? 'h2-contrast'
-                : '',
-            ]">Jogadores</h2>
+      <h2
+        v-bind:class="[
+          globalContrastVariable.applyContrast ? 'h2-contrast' : '',
+        ]"
+      >
+        Jogadores
+      </h2>
       <div class="container">
         <ul>
-          <li v-bind:key="player.nickname" v-for="player in players">{{ player.nickname }}</li>
+          <li v-bind:class="[
+          globalContrastVariable.applyContrast
+            ? 'li-contrast'
+            : 'li',
+        ]" v-bind:key="player.nickname" v-for="player in players">
+            {{ player.nickname }}
+          </li>
         </ul>
       </div>
-      <a v-bind:class="[
-              globalContrastVariable.applyContrast
-                ? 'init-contrast btn-contrast'
-                : 'init btn',
-            ]" v-if="gameData.isOwner" @click="startGame">Iniciar Jogo</a>
-      <a v-bind:class="[
-              globalContrastVariable.applyContrast
-                ? 'back-contrast btn-contrast'
-                : 'back btn',
-            ]" @click="exitGame">Sair</a>
+      <a
+        v-bind:class="[
+          globalContrastVariable.applyContrast
+            ? 'init-contrast btn-contrast'
+            : 'init btn',
+        ]"
+        v-if="gameData.isOwner"
+        @click="startGame"
+        >Iniciar Jogo</a
+      >
+      <a
+        v-bind:class="[
+          globalContrastVariable.applyContrast
+            ? 'back-contrast btn-contrast'
+            : 'back btn',
+        ]"
+        @click="exitGame"
+        >Sair</a
+      >
     </div>
-    <letterShow v-if="showLetter"/>
+    <letterShow v-if="showLetter" />
   </main>
 </template>
 
 <script>
-import httpService from '../services/http'
-import * as gameService from "../services/game"
-import {getGameData} from "../services/game.js"
-import LetterShow from "../components/LetterShow"
-import io from "socket.io-client"
-import { globalContrastVariable } from '../main.js';
+import httpService from "../services/http";
+import * as gameService from "../services/game";
+import { getGameData } from "../services/game.js";
+import LetterShow from "../components/LetterShow";
+import io from "socket.io-client";
+import { globalContrastVariable } from "../main.js";
+import Swal from "sweetalert2";
 
 export default {
-  name: 'GameRoom',
+  name: "GameRoom",
   components: {
-    letterShow: LetterShow
+    letterShow: LetterShow,
   },
 
   data: () => {
     return {
       players: [],
       showLetter: false,
-      gameStatus: JSON.parse(sessionStorage.getItem('gameStatus')),
-      gameData: JSON.parse(sessionStorage.getItem('data')),
+      gameStatus: JSON.parse(sessionStorage.getItem("gameStatus")),
+      gameData: JSON.parse(sessionStorage.getItem("data")),
       socket: io(httpService.baseURL),
       globalContrastVariable,
-    }
+    };
   },
 
   mounted() {
-    this.listen()
+    this.listen();
   },
 
+  methods: {
+    listen() {
+      const self = this;
 
-  methods:{
-      listen() {
-        const self = this
+      this.socket.emit("getGame", {
+        gameId: this.gameData.gameID,
+      });
 
-        this.socket.emit("getGame", {
-          gameId: this.gameData.gameID
-        });
+      this.socket.on("users", function (data) {
+        self.players = data.players;
+        self.gameStatus = data.status;
+      });
 
-        this.socket.on('users', function (data) {
-          self.players = data.players
-          self.gameStatus = data.status
-        });
+      this.socket.on("ownerExit", function (data) {
+        self.$router.push("EndGame");
+      });
 
-        this.socket.on('ownerExit', function (data) {
-          self.$router.push('EndGame')
-        });
+      this.socket.on("gameChanged", function (data) {
+        self.showLetter = true;
+        if (data.status === "IN_PROGRESS") {
+          setTimeout(() => self.$router.push("game"), 2000);
+          sessionStorage.setItem("gameStatus", JSON.stringify(data.status));
+        } else if (data.status === "FINISHED") {
+          Swal.fire({
+            icon: "error",
+            title: "STOP! Vamos ver a pontuação!",
+            text: translateText,
+            footer: translateFooter,
+          }).then((result) => {
+            console.log('result: ', result);
+          });
 
-        this.socket.on('gameChanged', function (data) {
-          self.showLetter = true
-          if(data.status === 'IN_PROGRESS' ){
-            setTimeout(() => self.$router.push('game'), 2000)
-            sessionStorage.setItem('gameStatus', JSON.stringify(data.status))
-          } else if (data.status === 'FINISHED'){
-            self.$router.push('GameScore')
-          } else {
-            self.showLetter = false
-            self.$router.push('GameRoom')
-          }
-        })
-      },
+          //self.$router.push('GameScore')
+        } else {
+          self.showLetter = false;
+          self.$router.push("GameRoom");
+        }
+      });
+    },
 
-     //change the game status at Socket to "in progress and go to next screen"
+    //change the game status at Socket to "in progress and go to next screen"
     startGame() {
-      const self = this
+      const self = this;
       this.socket.emit("changeGameStatus", {
         gameId: self.gameData.gameID,
-        status: 'IN_PROGRESS'
+        status: "IN_PROGRESS",
       });
     },
 
     exitGame() {
-      const self = this
+      const self = this;
       this.socket.emit("exit", {
         gameId: self.gameData.gameID,
         playerId: self.gameData.playerID,
-        isOwner: self.gameData.isOwner
+        isOwner: self.gameData.isOwner,
       });
-      return self.$router.push('/')
-    }
-  }
-}
+      return self.$router.push("/");
+    },
+  },
+};
 </script>
 
 <style scoped>
 h1 {
-    font-family: Avenir;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    background-color: #ffaf43;
-    border-top-right-radius: 1vh;
-    border-top-left-radius: 1vh;
-    padding-top: 5px;
-    margin-bottom: 0;
-    margin-top: 0;
-    color: white;
+  font-family: Avenir;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  background-color: #ffaf43;
+  border-top-right-radius: 1vh;
+  border-top-left-radius: 1vh;
+  padding-top: 5px;
+  margin-bottom: 0;
+  margin-top: 0;
+  color: white;
 }
 
 .h1-contrast {
-    font-family: Avenir;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    background-color: #080808;
-    border-top-right-radius: 1vh;
-    border-top-left-radius: 1vh;
-    padding-top: 5px;
-    margin-bottom: 0;
-    margin-top: 0;
-    color: white;
+  font-family: Avenir;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  background-color: #080808;
+  border-top-right-radius: 1vh;
+  border-top-left-radius: 1vh;
+  padding-top: 5px;
+  margin-bottom: 0;
+  margin-top: 0;
+  color: white;
 }
 
 .h2-contrast {
-    font-family: Avenir;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    background-color: #030303;
-    border-top-right-radius: 1vh;
-    border-top-left-radius: 1vh;
-    padding-top: 5px;
-    margin-bottom: 0;
-    margin-top: 0;
-    color: white;
+  font-family: Avenir;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  background-color: #030303;
+  border-top-right-radius: 1vh;
+  border-top-left-radius: 1vh;
+  padding-top: 5px;
+  margin-bottom: 0;
+  margin-top: 0;
+  color: white;
 }
 
 h2 {
-    font-family: HelveticaRounded;
-    font-size: 1.6em;
-    letter-spacing: 7px;
-    text-transform: uppercase;
-    background-color: #ffffff;
-    width: 80%;
-    padding-bottom: 5px;
-    margin: auto;
-    border-bottom: 0 !important;
-    border: 3px solid;
-    border-bottom-left-radius: 0 !important;
-    border-bottom-right-radius: 0 !important;
-    border-radius: 15px;
-    margin-top: 4vh;
+  font-family: HelveticaRounded;
+  font-size: 1.6em;
+  letter-spacing: 7px;
+  text-transform: uppercase;
+  background-color: #ffffff;
+  width: 80%;
+  padding-bottom: 5px;
+  margin: auto;
+  border-bottom: 0 !important;
+  border: 3px solid;
+  border-bottom-left-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+  border-radius: 15px;
+  margin-top: 4vh;
 }
 
 li {
-    font-size: 1.4em;
-    font-family: Exo2-reg;
-    padding: 3px 0 6px 0;
-    background-color: #f2f2f2;
+  font-size: 1.4em;
+  font-family: Exo2-reg;
+  padding: 3px 0 6px 0;
+  background-color: #f2f2f2;
 }
 
-li:nth-child(even)
-{
+li:nth-child(even) ~ .li-contrast-nth{
   text-shadow: 0 0 3vh white;
   color: #bf8434;
   background-color: rgb(210, 210, 210);
 }
 
-ul{
+.li-contrast {
+  color: white;
+  font-size: 1.4em;
+  font-family: Exo2-reg;
+  padding: 3px 0 6px 0;
+  background-color: #0c0c0c;
+}
+
+.li-contrast-nth {
+    color: white;
+  font-size: 1.4em;
+  font-family: Exo2-reg;
+  padding: 3px 0 6px 0;
+  background-color: #f10202;
+}
+
+.li {
+  font-size: 1.4em;
+  font-family: Exo2-reg;
+  padding: 3px 0 6px 0;
+  background-color: #f2f2f2;
+}
+
+ul {
   list-style-type: none;
   padding-left: 0;
-  margin:auto;
+  margin: auto;
   width: 80%;
   border-left: 3px solid;
   border-right: 3px solid;
+  overflow: auto;
 }
 
+@media screen and (max-height: 480px) {
+  body {
+    overflow-y: scroll;
+  }
+}
 
 html {
   height: 100%;
@@ -272,13 +329,13 @@ html {
 
 .btn:hover {
   transition: 0.5s;
-  background-color:#febb63;
+  background-color: #febb63;
   text-shadow: 0 0 5vh white;
 }
 
 .btn-contrast:hover {
   transition: 0.5s;
-  background-color:#070707;
+  background-color: #070707;
   text-shadow: 0 0 5vh white;
 }
 
@@ -293,15 +350,15 @@ html {
   background: #ffaf43;
   border-bottom: 1.5px solid #ffaf43;
   margin: auto;
-    border-left: 3px solid #ffaf43;
-    border-right: 3px solid #ffaf43;
-    width: 80%;
-    border-top-left-radius: 0 !important;
-    border-top-right-radius: 0 !important;
-    border-radius: 2vh;
-    margin-bottom: 2vh;
-    padding-left: 0;
-    padding-right: 0;
+  border-left: 3px solid #ffaf43;
+  border-right: 3px solid #ffaf43;
+  width: 80%;
+  border-top-left-radius: 0 !important;
+  border-top-right-radius: 0 !important;
+  border-radius: 2vh;
+  margin-bottom: 2vh;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 .init-contrast {
@@ -311,15 +368,15 @@ html {
   background: #181818;
   border-bottom: 1.5px solid #161616;
   margin: auto;
-    border-left: 3px solid #161616;
-    border-right: 3px solid #161616;
-    width: 80%;
-    border-top-left-radius: 0 !important;
-    border-top-right-radius: 0 !important;
-    border-radius: 2vh;
-    margin-bottom: 2vh;
-    padding-left: 0;
-    padding-right: 0;
+  border-left: 3px solid #161616;
+  border-right: 3px solid #161616;
+  width: 80%;
+  border-top-left-radius: 0 !important;
+  border-top-right-radius: 0 !important;
+  border-radius: 2vh;
+  margin-bottom: 2vh;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 .back:hover {

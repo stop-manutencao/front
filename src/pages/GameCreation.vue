@@ -18,7 +18,11 @@
       </div>
 
       <form class="game-creation-form">
-        <div class="input-wrapper">
+        <div v-bind:class="[
+          globalContrastVariable.applyContrast
+            ? 'input-wrapper-contrast'
+            : 'input-wrapper',
+        ]">
           <p>Email</p>
           <input
             class="email"
@@ -29,7 +33,11 @@
           <p class="invalidEmailMsg" style="display: none">Email inválido</p>
         </div>
 
-        <div class="input-wrapper">
+        <div v-bind:class="[
+          globalContrastVariable.applyContrast
+            ? 'input-wrapper-contrast'
+            : 'input-wrapper',
+        ]">
           <p>Apelido</p>
           <input
             class="nick"
@@ -40,8 +48,12 @@
           <p class="invalidNickMsg" style="display: none">Apelido inválido</p>
         </div>
 
-        <div class="input-wrapper">
-          <p>Número máximo de de categorias</p>
+        <div v-bind:class="[
+          globalContrastVariable.applyContrast
+            ? 'input-wrapper-contrast'
+            : 'input-wrapper',
+        ]">
+          <p>Número máximo de categorias</p>
           <input
             class="categorias"
             type="number"
@@ -52,8 +64,12 @@
           /><br />
         </div>
 
-        <div class="input-wrapper">
-          <p>Número máximo de de jogadores</p>
+        <div v-bind:class="[
+          globalContrastVariable.applyContrast
+            ? 'input-wrapper-contrast'
+            : 'input-wrapper',
+        ]">
+          <p>Número máximo de jogadores</p>
           <input
             class="players"
             type="number"
@@ -99,7 +115,7 @@ import { isEmailValid, isNicknameValid } from "../utils/utils.js";
 import * as gameService from "../services/game";
 import { shuffle } from "underscore";
 import { globalContrastVariable } from "../main.js";
-import Swal from 'sweetalert2'
+import Swal from "sweetalert2";
 
 export default {
   name: "Create",
@@ -151,10 +167,28 @@ export default {
         timer: this.timer,
       };
 
-      if (data.maxNumberPlayers <= 1) {
-        alert("Uma partida deve ter 2 ou mais jogadores!");
-      } else if (data.maxNumberCategories <= 1) {
-        alert("Uma partida deve ter 2 ou mais categorias!");
+      if (this.players < 2) {
+        var translateText = "Número de jogadores inválido!";
+        var translateFooter =
+          "Verifique o número de jogadores preenchido e tente novamente.";
+
+        Swal.fire({
+          icon: "error",
+          title: "Opa...",
+          text: translateText,
+          footer: translateFooter,
+        });
+      } else if (this.categories < 2) {
+        var translateCategoryText = "Número de categorias inválido!";
+        var translateCategoryFooter =
+          "Verifique o número de categorias solicitadas e tente novamente.";
+
+        Swal.fire({
+          icon: "error",
+          title: "Opa...",
+          text: translateCategoryText,
+          footer: translateCategoryFooter,
+        });
       } else {
         gameService
           .create(data)
@@ -168,13 +202,11 @@ export default {
                 status: res.data.status,
                 categories: res.data.category,
               };
-
               for (let i = 0; i < gameData.categories.length; i++) {
                 gameData.categories[i].alternative = shuffle(
                   gameData.categories[i].alternative
                 );
               }
-
               sessionStorage.setItem("data", JSON.stringify(gameData));
               sessionStorage.setItem(
                 "gameStatus",
@@ -182,7 +214,16 @@ export default {
               );
               return this.$router.push("GameRoom");
             }
-            alert(res.data.message);
+
+            if (res.data.message == "Could not create user") {
+              Swal.fire({
+                icon: "error",
+                title: "Opa...",
+                text: "Não foi possível criar a sala...",
+                footer: "Verifique o usuário e o e-mail informado.",
+              });
+            }
+
             console.error(res.data);
           })
           .catch((err) => console.error(err));
@@ -249,6 +290,13 @@ export default {
   width: 95%;
 }
 
+.input-wrapper-contrast {
+  display: flex;
+  flex-direction: column;
+  width: 95%;
+  color: black;
+}
+
 .panel-wrapper {
   width: 90%;
   height: 15vh;
@@ -297,7 +345,7 @@ p {
   box-shadow: 0 0 5px gray;
   margin-top: 5px;
   border-radius: 5px;
-  border-left: 5px solid rgb(92, 75, 114) !important;
+  border-left: 5px solid rgb(75, 114, 83) !important;
   border: none;
   -webkit-box-shadow: 0 0 5px gray;
 }

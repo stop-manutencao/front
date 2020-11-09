@@ -6,19 +6,31 @@
       </div>
 
       <form autocomplete="on" class="join-game-form">
-        <div class="input-wrapper">
+        <div v-bind:class="[
+          globalContrastVariable.applyContrast
+            ? 'input-wrapper-contrast'
+            : 'input-wrapper',
+        ]">
           <p>Email</p>
           <input class="email" type="email" placeholder="email@example.com" required v-model.lazy="email">
           <p class="invalidEmailMsg" style="display:none">Email inválido</p>
         </div>
 
-        <div class="input-wrapper">
+        <div v-bind:class="[
+          globalContrastVariable.applyContrast
+            ? 'input-wrapper-contrast'
+            : 'input-wrapper',
+        ]">
           <p>Apelido</p>
           <input class="nick" type="text" placeholder="John Doe" required v-model.lazy="nick">
           <p class="invalidNickMsg" style="display:none">Apelido inválido</p>
         </div>
 
-        <div class="input-wrapper">
+        <div v-bind:class="[
+          globalContrastVariable.applyContrast
+            ? 'input-wrapper-contrast'
+            : 'input-wrapper',
+        ]">
           <p>ID</p>
           <input autocomplete="off" class="id" type="text" min="0" placeholder="Id do Jogo" required v-model.lazy="id">
         </div>
@@ -184,6 +196,13 @@ export default {
   display: flex;
   flex-direction: column;
   width: 95%;
+}
+
+.input-wrapper-contrast {
+  display: flex;
+  flex-direction: column;
+  width: 95%;
+  color: black;
 }
 
 .panel-wrapper{
