@@ -69,7 +69,7 @@ export default {
 
 #alternatives-container{
   text-align: center;
-  border-top: 1px solid #444444;
+  border-top: 1px solid #0e0e0e;
   border-bottom: 1px solid #3e3e3e;
 }
 

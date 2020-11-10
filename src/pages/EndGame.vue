@@ -2,18 +2,13 @@
   <main>
     <div id="gameScore">
       <h1>
-        Resultados
+        Líder deixou o jogo :(
       </h1>
       <div class="container">
-        <table>
-          <tr :key="player.nick" v-for="player in players">
-            <th id="nick">{{player.nickname}}</th>
-            <th id="score">{{player.score}}</th>
-          </tr>
-        </table>
         <!-- </li> -->
       </div>
-      <a class="btn"  v-bind:class="[
+      <a class="btn"
+            v-bind:class="[
               globalContrastVariable.applyContrast ? 'reload-contrast' : 'reload',
             ]" @click="newGame">Jogar Novamente</a>
 
@@ -28,7 +23,7 @@ import { globalContrastVariable } from "../main.js";
 
 // v-if="gameData.isOwner"
 export default {
-  name: 'GameScore',
+  name: 'EndGame',
 
   data: () => {
     return {
@@ -45,16 +40,6 @@ export default {
   methods: {
     newGame() {
       this.$router.push('/')
-    },
-    getScore() {
-      const gameId = this.gameData ? this.gameData.gameID : ''
-
-      gameService.getScore(gameId)
-        .then(res => {
-          console.log(res)
-          this.players = res.data
-        })
-        .catch()
     }
   }
 }

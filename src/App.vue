@@ -1,6 +1,6 @@
 <template>
     <div id="bg">
-        <div id="app">
+        <div id="app" v-bind:class="[globalContrastVariable.applyContrast ? 'appContrast':'app']">
             <transition name="fade" mode="out-in">
                 <router-view></router-view>
             </transition>
@@ -9,9 +9,15 @@
 </template>
 
 <script>
-
+import { globalContrastVariable } from './main'
 export default {
-    name: 'App'
+    name: 'App',
+
+    data() {
+        return {
+            globalContrastVariable
+        }
+    }
 }
 </script>
 
@@ -26,7 +32,7 @@ export default {
 
     .fade-enter, .fade-leave-active { opacity: 0 }
 
-    #app{
+    .app{
         position: absolute;
         height: 100%;
         left: 0;
@@ -34,6 +40,19 @@ export default {
         margin: auto;
         top: 0;
         background: url('./assets/png/background.png') no-repeat;
+        background-position-x: center;
+        background-size: cover;
+       /* background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%23333333' fill-opacity='0.08'%3E%3Cpath d='M0 38.59l2.83-2.83 1.41 1.41L1.41 40H0v-1.41zM0 1.4l2.83 2.83 1.41-1.41L1.41 0H0v1.41zM38.59 40l-2.83-2.83 1.41-1.41L40 38.59V40h-1.41zM40 1.41l-2.83 2.83-1.41-1.41L38.59 0H40v1.41zM20 18.6l2.83-2.83 1.41 1.41L21.41 20l2.83 2.83-1.41 1.41L20 21.41l-2.83 2.83-1.41-1.41L18.59 20l-2.83-2.83 1.41-1.41L20 18.59z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");*/
+    }
+
+    .appContrast{
+        position: absolute;
+        height: 100%;
+        left: 0;
+        width: 100%;
+        margin: auto;
+        top: 0;
+        background: url('./assets/png/background_contrast.png') no-repeat;
         background-position-x: center;
         background-size: cover;
        /* background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%23333333' fill-opacity='0.08'%3E%3Cpath d='M0 38.59l2.83-2.83 1.41 1.41L1.41 40H0v-1.41zM0 1.4l2.83 2.83 1.41-1.41L1.41 0H0v1.41zM38.59 40l-2.83-2.83 1.41-1.41L40 38.59V40h-1.41zM40 1.41l-2.83 2.83-1.41-1.41L38.59 0H40v1.41zM20 18.6l2.83-2.83 1.41 1.41L21.41 20l2.83 2.83-1.41 1.41L20 21.41l-2.83 2.83-1.41-1.41L18.59 20l-2.83-2.83 1.41-1.41L20 18.59z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");*/
