@@ -23,11 +23,13 @@
       </h2>
       <div class="container">
         <ul>
-          <li v-bind:class="[
-          globalContrastVariable.applyContrast
-            ? 'li-contrast'
-            : 'li',
-        ]" v-bind:key="player.nickname" v-for="player in players">
+          <li
+            v-bind:class="[
+              globalContrastVariable.applyContrast ? 'li-contrast' : 'li',
+            ]"
+            v-bind:key="player.nickname"
+            v-for="player in players"
+          >
             {{ player.nickname }}
           </li>
         </ul>
@@ -109,16 +111,26 @@ export default {
           setTimeout(() => self.$router.push("game"), 2000);
           sessionStorage.setItem("gameStatus", JSON.stringify(data.status));
         } else if (data.status === "FINISHED") {
-          Swal.fire({
-            icon: "error",
-            title: "STOP! Vamos ver a pontuação!",
-            text: translateText,
-            footer: translateFooter,
-          }).then((result) => {
-            console.log('result: ', result);
-          });
+          var url =
+            "https://github.com/stop-manutencao/front/blob/master/icon-stop.png?raw=true";
 
-          //self.$router.push('GameScore')
+          if (globalContrastVariable.applyContrast) {
+            url =
+              "https://github.com/stop-manutencao/front/blob/master/icon-stop-contrast.png?raw=true";
+          }
+
+          Swal.fire({
+            imageUrl: url,
+            title: "Alguém pediu STOP!",
+            imageWidth: 200,
+            imageHeight: 200,
+            text: "Vamos ver a pontuação.",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              self.$router.push("GameScore");
+            }
+            console.log("result: ", result);
+          });
         } else {
           self.showLetter = false;
           self.$router.push("GameRoom");
@@ -212,7 +224,7 @@ li {
   background-color: #f2f2f2;
 }
 
-li:nth-child(even) ~ .li-contrast-nth{
+li:nth-child(even) ~ .li-contrast-nth {
   text-shadow: 0 0 3vh white;
   color: #bf8434;
   background-color: rgb(210, 210, 210);
@@ -227,7 +239,7 @@ li:nth-child(even) ~ .li-contrast-nth{
 }
 
 .li-contrast-nth {
-    color: white;
+  color: white;
   font-size: 1.4em;
   font-family: Exo2-reg;
   padding: 3px 0 6px 0;

@@ -126,9 +126,9 @@ export default {
 
           Swal.fire({
             icon: 'error',
-            title: 'Oops...',
-            text: res.data.message,
-            footer: res.data.hint
+            title: 'Opa...',
+            text: `Já existe alguém com o apelido: ${data.nickname} e e-mail: ${data.email}.`,
+            footer: 'Verifique suas credenciais e tente novamente!'
           })
           console.error(res.data)
         })

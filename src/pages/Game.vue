@@ -122,29 +122,37 @@ export default {
       this.socket.on("gameChanged", function (data) {
         if (data.status === "FINISHED") {
           console.log(data.user);
-          self.$router.push("GameScore");
+
+          var url = "https://github.com/stop-manutencao/front/blob/master/icon-stop.png?raw=true";
+
+          if(globalContrastVariable.applyContrast) {
+            url = "https://github.com/stop-manutencao/front/blob/master/icon-stop-contrast.png?raw=true";
+          }
+
+          Swal.fire({
+            imageUrl: url,
+            title: "Alguém pediu STOP!",
+            text: "Vamos ver a pontuação.",
+            imageWidth: 200,
+            imageHeight: 200,
+          }).then((result) => {
+            console.log("result: ", result);
+
+            if (result.isConfirmed) {
+              self.$router.push("GameScore");
+            }
+          });
         }
       });
     },
 
     //change the game status at Socket Event to "FINISHED" and go to next screen
     stopGame() {
-      const self = this;
-      this.socket.emit("changeGameStatus", {
-        gameId: self.gameData.gameID,
-        status: "FINISHED",
-      });
-
-      Swal.fire({
-        icon: "error",
-        title: "STOP! Vamos ver a pontuação!",
-        text: translateText,
-        footer: translateFooter,
-      }).then((result) => {
-        console.log("result: ", result);
-      });
-
-      //self.$router.push('GameScore')
+          const self = this;
+          this.socket.emit("changeGameStatus", {
+            gameId: self.gameData.gameID,
+            status: "FINISHED",
+          });
     },
 
     increaseAnswers() {
