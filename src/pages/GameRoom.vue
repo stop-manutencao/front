@@ -198,6 +198,10 @@ h1 {
   color: white;
 }
 
+body {
+  height:100vh;
+}
+
 h2 {
   font-family: HelveticaRounded;
   font-size: 1.6em;
@@ -261,14 +265,9 @@ ul {
   overflow: auto;
 }
 
-@media screen and (max-height: 480px) {
-  body {
-    overflow-y: scroll;
-  }
-}
 
 html {
-  height: 100%;
+  height: 100% !important;
 }
 
 .gameRoom h1 {

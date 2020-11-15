@@ -120,13 +120,16 @@ export default {
         gameId: self.gameData.gameID,
       });
       this.socket.on("gameChanged", function (data) {
+        console.log('CHANGED: ', data);
         if (data.status === "FINISHED") {
           console.log(data.user);
 
-          var url = "https://github.com/stop-manutencao/front/blob/master/src/assets/png/icon-stop.png?raw=true";
+          var url =
+            "https://github.com/stop-manutencao/front/blob/master/src/assets/png/icon-stop.png?raw=true";
 
-          if(globalContrastVariable.applyContrast) {
-            url = "https://github.com/stop-manutencao/front/blob/master/src/assets/png/icon-stop-contrast.png?raw=true";
+          if (globalContrastVariable.applyContrast) {
+            url =
+              "https://github.com/stop-manutencao/front/blob/master/src/assets/png/icon-stop-contrast.png?raw=true";
           }
 
           Swal.fire({
@@ -144,15 +147,37 @@ export default {
           });
         }
       });
+
+      this.socket.on("playerLeft", function (data) {
+        var url =
+          "https://github.com/stop-manutencao/front/blob/feature/contrast/src/assets/png/player-left.png?raw=true";
+
+        if (globalContrastVariable.applyContrast) {
+          url =
+            "https://github.com/stop-manutencao/front/blob/feature/contrast/src/assets/png/player-left-contrast.png?raw=true";
+        }
+
+        if (data.playerId !== self.gameData.playerID) {
+          Swal.fire({
+            imageUrl: url,
+            title: "Um jogador abandonou a partida...",
+            text: "Vamos continuar o jogo.",
+            imageWidth: 200,
+            imageHeight: 200,
+          }).then((result) => {
+            console.log("result: ", result);
+          });
+        }
+      });
     },
 
     //change the game status at Socket Event to "FINISHED" and go to next screen
     stopGame() {
-          const self = this;
-          this.socket.emit("changeGameStatus", {
-            gameId: self.gameData.gameID,
-            status: "FINISHED",
-          });
+      const self = this;
+      this.socket.emit("changeGameStatus", {
+        gameId: self.gameData.gameID,
+        status: "FINISHED",
+      });
     },
 
     increaseAnswers() {
