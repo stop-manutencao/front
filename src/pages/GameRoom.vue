@@ -1,5 +1,5 @@
-<template class='overscroll'>
-  <main class='overscroll'>
+<template>
+  <main class="overscroll">
     <div
       v-if="!showLetter"
       v-bind:class="[
@@ -419,7 +419,7 @@ html {
 }
 
 .overscroll {
-  max-height: 100%; 
+  max-height: 100% !important; 
   overflow-y: auto !important;
 }
 </style>
