@@ -1,5 +1,5 @@
 <template>
-  <main class="overscroll">
+  <main>
     <div
       v-if="!showLetter"
       v-bind:class="[
