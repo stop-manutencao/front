@@ -111,12 +111,10 @@ export default {
           setTimeout(() => self.$router.push("game"), 2000);
           sessionStorage.setItem("gameStatus", JSON.stringify(data.status));
         } else if (data.status === "FINISHED") {
-          var url =
-            "https://github.com/stop-manutencao/front/blob/master/icon-stop.png?raw=true";
+          var url = "https://github.com/stop-manutencao/front/blob/master/src/assets/png/icon-stop.png?raw=true";
 
-          if (globalContrastVariable.applyContrast) {
-            url =
-              "https://github.com/stop-manutencao/front/blob/master/icon-stop-contrast.png?raw=true";
+          if(globalContrastVariable.applyContrast) {
+            url = "https://github.com/stop-manutencao/front/blob/master/src/assets/png/icon-stop-contrast.png?raw=true";
           }
 
           Swal.fire({

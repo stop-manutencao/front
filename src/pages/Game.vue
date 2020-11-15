@@ -123,10 +123,10 @@ export default {
         if (data.status === "FINISHED") {
           console.log(data.user);
 
-          var url = "https://github.com/stop-manutencao/front/blob/master/icon-stop.png?raw=true";
+          var url = "https://github.com/stop-manutencao/front/blob/master/src/assets/png/icon-stop.png?raw=true";
 
           if(globalContrastVariable.applyContrast) {
-            url = "https://github.com/stop-manutencao/front/blob/master/icon-stop-contrast.png?raw=true";
+            url = "https://github.com/stop-manutencao/front/blob/master/src/assets/png/icon-stop-contrast.png?raw=true";
           }
 
           Swal.fire({
