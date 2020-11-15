@@ -33,6 +33,8 @@ export default {
     .fade-enter, .fade-leave-active { opacity: 0 }
 
     .app{
+          max-height: 100% !important; 
+  overflow-y: auto !important;
         position: absolute;
         height: 100%;
         left: 0;
@@ -60,6 +62,8 @@ export default {
 
     #bg
     {
+          max-height: 100% !important; 
+  overflow-y: auto !important;
         background-size: 6vh;
         animation:move 50s linear infinite;
         background-image: url('./assets/svg/hideout.svg');

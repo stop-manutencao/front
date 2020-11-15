@@ -419,7 +419,7 @@ html {
 }
 
 .overscroll {
-  max-height: 100% !important; 
+  max-height: 80% !important; 
   overflow-y: auto !important;
 }
 </style>
