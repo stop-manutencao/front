@@ -1,5 +1,5 @@
 
-<template>
+<template class="overscroll">
     <!-- <div id="bg"> -->
       <div id="home" class="home">
           <img id="logo" class="logo" draggable="false" v-bind:class="[globalContrastVariable.applyContrast ? 'logoContrast' : '']">
